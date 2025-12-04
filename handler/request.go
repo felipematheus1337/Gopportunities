@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -9,6 +10,15 @@ func errParamIsRequired(name, typ string) error {
 }
 
 type CreateOpeningRequest struct {
+	Role     string `json:"role"`
+	Company  string `json:"company"`
+	Location string `json:"location"`
+	Remote   *bool  `json:"remote"`
+	Link     string `json:"link"`
+	Salary   int64  `json:"salary"`
+}
+
+type UpdateOpeningRequest struct {
 	Role     string `json:"role"`
 	Company  string `json:"company"`
 	Location string `json:"location"`
@@ -48,4 +58,12 @@ func (r *CreateOpeningRequest) Validate() error {
 	}
 
 	return nil
+}
+
+func (r *UpdateOpeningRequest) Validate() error {
+	if r.Role != "" || r.Company != "" || r.Location != "" || r.Remote != nil || r.Salary > 0 {
+		return nil
+	}
+
+	return errors.New("request body is empty")
 }
